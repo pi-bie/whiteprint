@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="800"
+   height="800"
+   version="1.1"
+   id="svg2"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="swatch2">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop2" />
+    </linearGradient>
+  </defs>
+  <path
+     d="M 350,400 V 294.73687 a 50,42.105297 0 0 1 100,0 V 400 H 350"
+     stroke-width="0.999937"
+     stroke="#000000"
+     fill="#fcfcfc"
+     zx="0"
+     zy="50"
+     id="path1"
+     style="stroke-linecap:round;stroke-linejoin:round" />
+  <path
+     d="M 280,400 H 550 350 V 294.73687 a 50,42.105297 0 0 1 100,0 V 400 M 350,294.73687 a 57.5,48.421095 0 0 1 115,0 V 400 M 350,294.73687 a 65,54.736893 0 0 1 130,0 V 400"
+     stroke-width="20"
+     stroke="#000000"
+     id="path2"
+     style="fill:none;stroke-linecap:butt;stroke-linejoin:miter" />
+</svg>

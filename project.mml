@@ -1,0 +1,747 @@
+{
+  "bounds": [
+    -180,
+    -85.0511,
+    180,
+    85.0511
+  ],
+  "center": [
+    8.5317,
+    52.0204,
+    15
+  ],
+  "format": "png8",
+  "interactivity": false,
+  "minzoom": 12,
+  "maxzoom": 20,
+  "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+  "Stylesheet": [
+    "style.mss",
+    "brunnel.mss",
+    "signatures.mss"
+  ],
+  "Layer": [
+    {
+      "id": "countries",
+      "name": "countries",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "geometry": "polygon",
+      "Datasource": {
+        "file": "http://mapbox-geodata.s3.amazonaws.com/natural-earth-1.4.0/cultural/10m-admin-0-countries.zip",
+        "type": "shape",
+        "id": "countries",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "layerId": "countries",
+      "extent": [
+        -179.99978348919964,
+        -85.051,
+        180,
+        83.63381093402977
+      ]
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        26.0633718,
+        35.80768039971697,
+        54.1388804,
+        46.98634210016408
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "           (select way,\"natural\" from planet_osm_polygon\n            where (\"natural\" in ('land', 'island')\n\t\tor \"man_made\" in ('pier')) AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n            order by z_order,way_area desc) as land",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "2901361.277131766,4274190.657504921,6026712.598245939,5939845.040419122",
+        "dbname": "gis",
+        "port": "5432"
+      },
+      "id": "islands",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "islands",
+      "layerId": "islands"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        -4.0388503,
+        50.921290199263275,
+        11.8515341,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "            (select way,amenity,landuse,leisure,name,man_made,highway,\"natural\",tourism,tags->'public_transport' as public_transport,tags->'leaf_type' AS leaves\n            from planet_osm_polygon\n            where (landuse is not null\n                or leisure is not null\n                or amenity in ('parking','university','college','school','hospital','grave_yard')\n                or highway in ('pedestrian', 'services','footway')\n                or \"natural\" in ('field','beach','heath','mud','wood','scrub','meadow','crop','grass','grassland','beach','sand')\n                or tourism in ('attraction','camp_site','caravan_site','picnic_site','zoo')\n                or tags->'public_transport'='platform')\n            AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n            order by z_order,way_area desc\n            ) as leisure",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6607382.6621970795,1319306.7411311178,8982220.323750606",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "leisure",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "leisure",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "leisure",
+      "layerId": "leisure",
+      "status": "off"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT\n  way,\n  feature,\n  name,\n  leaves\n  FROM (\n\tSELECT\n\t  way,\n\t  \"natural\" as feature,\n\t  name,\n\t  tags->'leaf_type' AS leaves,\n\t  z_order,\n\t  osm_id,\n\t  way_area\n    FROM planet_osm_polygon\n\tWHERE\n\t \"natural\" in ('field','beach','heath','mud','wood','scrub','meadow','crop','grass','grassland','beach','sand')\n\t  AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real)\nAS features\nORDER BY\n  z_order,\n  way_area desc,\n  osm_id\n) AS landcover",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "natural",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "natural",
+      "class": "landcover",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "natural",
+      "layerId": "natural"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT\n  way,\n  feature,\n  name,\n  leaves\n  FROM (\n\tSELECT\n\t  way,\n\t  CASE WHEN landuse='meadow' AND tags->'meadow' = 'meadow_orchard' OR landuse='orchard' AND tags->'orchard' = 'meadow_orchard' THEN 'meadow_orchard' ELSE landuse END AS feature,\n\t  name,\n\t  NULL AS leaves,\n\t  z_order,\n\t  osm_id,\n\t  way_area\n\tFROM planet_osm_polygon\n\tWHERE\n\t  landuse IS NOT NULL\n\t  AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n  UNION ALL\n\tSELECT\n\t  way,\n\t  tags->'landcover' AS feature,\n\t  name,\n\t  NULL AS leaves,\n\t  z_order,\n\t  osm_id,\n\t  way_area\n\tFROM planet_osm_polygon\n\tWHERE\n\t  tags->'landcover' IS NOT NULL\n\t  AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n  UNION ALL\n\tSELECT\n\t  way,\n\t  leisure AS feature,\n\t  name,\n\t  NULL AS leaves,\n\t  z_order,\n\t  osm_id,\n\t  way_area\n\tFROM planet_osm_polygon\n\tWHERE\n\t  leisure IN ('dog_park','garden','golf_course','miniature_golf','park')\n\t  AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n  UNION ALL\n    SELECT\n\t  way,\n\t  amenity AS feature,\n\t  name,\n\t  NULL AS leaves,\n\t  z_order,\n\t  osm_id,\n\t  way_area\n    FROM planet_osm_polygon\n    WHERE\n\t  amenity in ('grave_yard')\n\t  AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real)\nAS features\nORDER BY\n  z_order,\n  way_area desc,\n  osm_id\n) AS landuse",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "landuse",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "landuse",
+      "class": "landcover",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "landuse",
+      "layerId": "landuse"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -4.0388503,
+        50.98171609925262,
+        12.039244699999998,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,waterway,\n            case when tunnel in ('yes','true','1','culvert') then 'yes'::text else tunnel end as tunnel\n            from planet_osm_line\n            where waterway in ('river','canal','stream','drain')\n                and (bridge is null or bridge not in ('yes','true','1','aqueduct'))\n            order by z_order\n            ) as water_lines",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6618060.149427954,1340202.5895396175,8982220.323750606",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "water_lines",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "water_lines",
+      "class": "water",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "water_lines",
+      "layerId": "water_lines"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "            (select way,CASE WHEN tags->'wetland' is NOT NULL THEN \"natural\"||'_'||COALESCE(tags->'wetland','') ELSE \"natural\" END AS \"natural\",waterway,landuse,way_area\n            from planet_osm_polygon\n            where (waterway in ('dock','mill_pond','riverbank','canal','river')\n                or landuse in ('reservoir','water','basin')\n                or \"natural\" in ('lake','water','land','wetland','marsh','glacier','pond'))\nAND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n            order by z_order,way_area desc\n            ) as water_areas",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "water_areas",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "water_areas",
+      "class": "water",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "water_areas",
+      "layerId": "water_areas"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT\n    way,\n    feature\nFROM (\n    select\n        way,\n        leisure AS feature,\n        z_order,\n        way_area\n    FROM planet_osm_polygon\n    WHERE\n        leisure in ('sports_centre','stadium','pitch','track','swimming_pool','playground')\n    AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n UNION ALL\n    SELECT\n        way,\n        aeroway as feature,\n        z_order,\n        way_area    \n    FROM planet_osm_polygon\n    WHERE aeroway IN ('apron','runway','model_runway','taxiway','stopway','launchpad','landingpad')\n    AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n UNION ALL\n    SELECT\n        way,\n        tourism as feature,\n        z_order,\n        way_area    \n    FROM planet_osm_polygon\n    WHERE tourism IN ('camp_site','caravan_site','picnic_site')\n    AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n UNION ALL\n    SELECT\n        way,\n        highway as feature,\n        z_order,\n        way_area    \n    FROM planet_osm_polygon\n    WHERE highway IN ('pedestrian','footway','services','platform')\n    AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\n ) AS features\n ORDER BY\n    z_order,\n    way_area DESC\n) AS grounds",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "grounds",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "grounds",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "grounds",
+      "layerId": "grounds"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        8.31,
+        35.80768039971697,
+        54.1388804,
+        52.32999989909499
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,highway from planet_osm_line where tunnel in ('yes','true','1') order by z_order) as roads",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "925064.9684921034,4274190.657504921,6026712.598245939,6860015.023396702",
+        "dbname": "gis",
+        "port": "5432"
+      },
+      "id": "tunnels",
+      "class": "roads",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "tunnels",
+      "layerId": "tunnels",
+      "status": "off"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        8.31,
+        35.80768039971697,
+        54.1388804,
+        52.32999989909499
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,highway,railway,layer,bridge,tunnel\n            from planet_osm_line\n            where (highway is not null\n                or railway is not null)\n                and bridge not in ('no','false','0')\n            order by z_order\n            ) as roads",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "925064.9684921034,4274190.657504921,6026712.598245939,6860015.023396702",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "bridges",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "bridges",
+      "class": "roads",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "bridges",
+      "layerId": "bridges"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,COALESCE(barrier,\"natural\") AS feature from planet_osm_polygon where (barrier is not null or \"natural\"='hedge') AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real) as barriers",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "polygon_barriers",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "polygon_barriers",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "polygon_barriers",
+      "layerId": "polygon_barriers"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -4.0388503,
+        50.98171609925262,
+        12.039244699999998,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,COALESCE(barrier,\"natural\",man_made,waterway) AS feature,tags->'leaf_type' as leaves from planet_osm_line where barrier is not null or \"natural\" in ('hedge','cliff','tree_row') or man_made='embankment' OR (waterway='weir' AND (tunnel IS NULL OR tunnel NOT IN ('yes','true','1')))) as barriers",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6618060.149427954,1340202.5895396175,8982220.323750606",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "line_features",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "line_barriers",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "line_barriers",
+      "layerId": "line_barriers"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -4.0388503,
+        50.98171609925262,
+        12.039244699999998,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way,\n           (CASE WHEN feature IN ('highway_motorway_link', 'highway_trunk_link', 'highway_primary_link', 'highway_secondary_link', 'highway_tertiary_link') THEN substr(feature, 0, length(feature)-4) ELSE feature END) AS feature,\n            service,\n            ref,\n            refs,\n            height,\n            tunnel,\n            bridge,\n            bicycle,\n            foot,\n            sidewalk,\n            layernotnull,\n            z_order\nFROM ((SELECT way,\n('highway_' || highway) AS feature,\nNULL AS service,\nref,\narray_to_string(string_to_array(ref, ';'), E'\\n') as refs,\narray_length(string_to_array(ref, ';'),1) AS height,\nCASE WHEN tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\nCASE WHEN bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\nCASE WHEN bicycle in ('designated','official') then true else false end as bicycle,\nCASE WHEN foot in ('designated','official') then true else false end as foot,\ntags->'sidewalk' as sidewalk,\nCOALESCE(layer,0) AS layernotnull,\nosm_id,\nz_order\nFROM planet_osm_line\nWHERE highway IS NOT NULL)\nUNION ALL\n(SELECT\nway,\n('railway_' || railway) AS feature,\nservice,\nref,\narray_to_string(string_to_array(ref, ';'), E'\\n') as refs,\narray_length(string_to_array(ref, ';'),1) AS height,\nCASE WHEN tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\nCASE WHEN bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\nfalse AS bicycle,\nfalse AS foot,\nNULL AS sidewalk,\nCOALESCE(layer,0) AS layernotnull,\nosm_id,\nz_order\nFROM planet_osm_line\nWHERE railway IS NOT NULL)\n ) AS features\nORDER BY\nlayernotnull,\nCASE WHEN bridge='yes' THEN 2 ELSE 1 END,\nz_order,\nCASE WHEN substring(feature for 8) = 'railway_' THEN 2 ELSE 1 END,\nosm_id ) AS roads2_sql",
+        "key_field": "",
+        "geometry_field": "way",
+        "dbname": "gis",
+        "id": "roads2",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6618060.149427954,1340202.5895396175,8982220.323750606"
+      },
+      "id": "roads",
+      "class": "roads",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "roads",
+      "properties": {
+        "cache-features": true,
+        "minzoom": 10
+      },
+      "layerId": "roads"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -4.0388503,
+        50.98171609925262,
+        12.039244699999998,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,highway,railway,case when railway is not null then service else null end as service,ref,array_to_string(string_to_array(ref, ';'), E'\\n') as refs,tags->'sidewalk' as sidewalk,COALESCE(layer,0) AS layernotnull,array_length(string_to_array(ref, ';'),1) AS height,\n            case when railway is not null then 9999 when bridge in ('yes','true','1') then 1000 else z_order end as z_order,\n            case when tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\n            case when bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\n            case when bicycle in ('designated','official') then true else false end as bicycle,\n            case when foot in ('designated','official') then true else false end as foot\n            from planet_osm_line\n            where highway is not null\n                or railway is not null\n            order by layernotnull ASC,z_order ASC) as roads",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "dynamic",
+        "extent": "",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "roads",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "roads_old",
+      "class": "roads",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "roads_old",
+      "layerId": "roads_old",
+      "status": "off"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -4.0388503,
+        50.98171609925262,
+        12.039244699999998,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT\n            way,\n            aeroway,\n            bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct') AS bridge\n          FROM planet_osm_line\n          WHERE aeroway IN ('runway', 'taxiway')\n          ORDER BY\n            bridge NULLS FIRST,\n            CASE WHEN aeroway = 'runway' THEN 1 ELSE 0 END\n        ) AS aeroways",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6618060.149427954,1340202.5895396175,8982220.323750606",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "aeroways",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "aeroways",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "aeroways",
+      "layerId": "aeroways"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        -4.0388503,
+        50.921290199263275,
+        11.8515341,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,Coalesce(aeroway,leisure) AS feature,way_area,way_area/(!pixel_width!*!pixel_height!) AS way_pixels,Least(500,Greatest(100,sqrt(way_area/(!pixel_width!*!pixel_height!)))) AS length from planet_osm_polygon where leisure in ('sports_centre','stadium','pitch','playground') or aeroway in ('aerodrome') order by z_order ASC ,leisure ASC, way_area desc) as sports_grounds",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6607382.6621970795,1319306.7411311178,8982220.323750606",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "leisure-sports_signatures",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "leisure-sports_signatures",
+      "class": "nodes",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "leisure-sports_signatures",
+      "layerId": "leisure-sports_signatures"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,building,leisure,railway,amenity,man_made,landuse,\"addr:housenumber\",\n(CASE \n\tWHEN (building IN ('house','apartments','detached','terrace','residential','farm','garage','bungalow','dormitory','semidetached_house')) THEN 'residential'\n\tWHEN (building IN ('commercial','retail','supermarket','industrial','kiosk','office','warehouse','farm_auxiliary','barn') OR amenity in ('bank','cinema','nightclub','restaurant') OR shop IS NOT null OR tags->'office' IN ('company','estate_agent','insurance','lawyer','notary','financial','tax_advisor','travel_agent') OR man_made IN ('works')) THEN 'commercial'\n\tWHEN (building IN ('public','civic','church','chapel','school','university','hospital','fire_station','college','government','kindergarten','train_station') OR amenity IN ('college','kindergarten','library','school','university','place_of_worship','clinic','hospital','theatre','courthouse','police','fire_station','prison','townhall','monastery') OR tags->'office' in ('government','diplomatic','religion') OR religion IS NOT null OR railway='station') THEN 'public'\nEND) AS usetype\nFROM planet_osm_polygon\nWHERE (building is not null\nor landuse='building'\nor power in ('station','sub_station')\nor railway='station'\nor amenity='place_of_worship')\nAND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\nORDER BY z_order DESC) as buildings",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "port": "5432",
+        "dbname": "gis",
+        "id": "buildings",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "buildings",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "buildings",
+      "layerId": "buildings"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,building,amenity,\nsqrt(way_area/ST_Area(ST_OrientedEnvelope(way))) AS factor,\nsqrt((sin(pi()/2-mrad)*mheight/(!pixel_height!))^2+(cos(0.5*pi()-mrad)*mheight/(!pixel_width!))^2) AS mheight,\nsqrt((-sin(pi()/2-mrad)*mwidth/(!pixel_height!))^2+(cos(-.5*pi()-mrad)*mwidth/(!pixel_width!))^2) AS mwidth,\nCASE WHEN (mheight > mwidth) THEN Degrees(mrad) ELSE Degrees(mrad+pi()/2) END AS mdir\nFROM planet_osm_polygon AS poly\n\tCROSS JOIN LATERAL ST_ExteriorRing(ST_OrientedEnvelope(way)) AS oenv(geom)\n\tCROSS JOIN LATERAL ST_Length(ST_MakeLine(ST_PointN(geom,1), ST_PointN(geom,2))) as mheight\n\tCROSS JOIN LATERAL ST_Length(ST_MakeLine(ST_PointN(geom,2), ST_PointN(geom,3))) as mwidth\n\tCROSS JOIN LATERAL ST_Azimuth(ST_PointN(geom,1),ST_PointN(geom,2)) AS mrad\nWHERE (building IN ('cathedral','church','chapel','mosque','synagogue') \nAND amenity='place_of_worship')\nAND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\nORDER BY z_order DESC) as buildings",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "port": "5432",
+        "dbname": "gis",
+        "id": "worshipplace",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "worshipplaces",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "worshipplaces",
+      "layerId": "worshipplaces"
+    },
+    {
+      "geometry": "point",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way, tourism, historic, man_made, \"natural\", name, tags->'memorial' as memorial, tags->'information' as information, Coalesce(tags->'board:title',name) as title, tags->'board_type' AS boardtype, case when tags->'ele' is not null then tags->'ele'::varchar || 'm'::varchar end as ele, tags->'leaf_type' as leaves, ref,\ncase when tags->'hiking'='yes' or tags->'foot'='yes' then true else false end as foot\nfrom planet_osm_point \nwhere tourism in ('information','picnic_site','wilderness_hut') or historic in ('boundary_stone','monument','memorial','milestone') or man_made in ('watermill','windmill') or planet_osm_point.natural='tree' and tags->'denotation' in ('landmark','natural_monument')\nUNION\nselect ST_Centroid(way) AS way, tourism, historic, man_made, \"natural\", name, null as memorial, null as information, null as title, null AS boardtype, null as leaves, null as ele, ref,\nnull as foot from planet_osm_polygon WHERE historic='monument' OR man_made in ('watermill','windmill')) as nodes",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "tourism2",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "tourism_old",
+      "class": "nodes",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "tourism_old",
+      "layerId": "tourism_old",
+      "status": "off"
+    },
+    {
+      "geometry": "point",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,information,historic,feature,name,boardtype,ele,leaves,ref,\nCASE WHEN information='guidepost' THEN Array_To_String(Array[name,ref,ele],'\n')\nWHEN information IN ('map','board') THEN Coalesce(title,name)\nELSE NULL END AS label FROM (\nSELECT\n\tway,\n\tCASE WHEN tourism='information' THEN tags->'information' ELSE NULL END AS information,\n\tCASE WHEN historic='memorial' THEN historic ||'_'|| Coalesce(tags->'memorial','') ELSE historic END AS historic,\n\tCoalesce(\n          CASE WHEN (man_made='watermill' AND (tags->'ruins'='yes' OR tags->'disused:watermill' = 'yes') OR tags->'abandoned:man_made'='watermill') THEN 'former_watermill'\n          ELSE man_made END,\"natural\") AS feature,\n\tname,\n\tCASE WHEN tourism='information' THEN COALESCE(tags->'map:title',tags->'board:title') END AS title,\n\tCASE WHEN tourism='information' THEN tags->'board_type' END AS boardtype,\n\tcase when tags->'ele' is not null then tags->'ele'::varchar || 'm'::varchar end as ele,\n\ttags->'leaf_type' as leaves,\n\tref\nFROM planet_osm_point \nWHERE\n     (tourism='information' AND tags->'information'!='guidepost' OR (tags->'information' = 'guidepost' AND tags->'hiking'='yes' or tags->'foot'='yes'))\n  OR historic IN ('boundary_stone','monument','memorial','milestone')\n  OR man_made IN ('watermill','windmill')\n  OR \"natural\"='tree' and tags->'denotation' in ('landmark','natural_monument')\nUNION\nSELECT\n\tST_Centroid(way) AS way,\n\ttourism AS information, historic, CASE WHEN (man_made='watermill' AND (tags->'ruins'='yes' OR tags->'disused:watermill' = 'yes') OR tags->'abandoned:man_made'='watermill') THEN 'former_watermill' ELSE man_made END AS feature, name, null AS boardtype, null as title, null as leaves, null as ele, ref\nFROM planet_osm_polygon\nWHERE\n\thistoric='monument' \n OR man_made in ('watermill','windmill')) as nodes\n) AS tourism",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "tourism",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "tourism",
+      "class": "nodes",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "tourism",
+      "layerId": "tourism"
+    },
+    {
+      "geometry": "point",
+      "extent": [
+        1.4042559999999997,
+        50.9425607992595,
+        11.8153741,
+        59.20667170135131
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way, COALESCE(amenity, tourism) AS amenity, ref, tags->'shelter_type' as shelter, tags->'fountain' as fountain from planet_osm_point \nwhere (amenity='shelter' AND (tags->'shelter_type' IS NULL OR tags->'shelter_type' != 'public_transport')) OR amenity in ('fountain','drinking_water') OR tourism IN ('wilderness_hut','picnic_site')) as nodes",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "156321.06286339916,6611139.675470055,1315281.428344033,8225191.288640352",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "amenities",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "amenities",
+      "class": "nodes",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "amenities",
+      "layerId": "amenities"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        -4.0388503,
+        50.921290199263275,
+        11.8515341,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "            (select way,landuse,name\n            from planet_osm_polygon\n            where landuse in ('farmyard','farm') AND way_area > 0.05*!pixel_width!::real*!pixel_height!::real) as farms",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6607382.6621970795,1319306.7411311178,8982220.323750606",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "farms",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "farms",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "farms",
+      "layerId": "farms"
+    },
+    {
+      "geometry": "point",
+      "extent": [
+        1.4042559999999997,
+        50.9425607992595,
+        11.8153741,
+        59.20667170135131
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,waterway,tags->'ford' as ford,COALESCE(CASE WHEN tags->'ford' = 'yes' THEN 'ford' ELSE tags->'ford' END, waterway) as feature from planet_osm_point WHERE tags->'ford' is not NULL or waterway='weir') as nodes",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "156321.06286339916,6611139.675470055,1315281.428344033,8225191.288640352",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "fords",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "fords",
+      "class": "water",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "fords",
+      "layerId": "fords"
+    },
+    {
+      "geometry": "point",
+      "extent": [
+        1.4042559999999997,
+        50.9425607992595,
+        11.8153741,
+        59.20667170135131
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way, \"natural\", man_made from planet_osm_point WHERE \"natural\" = 'cave_entrance' OR man_made IN ('adit','cellar_entrance') ) as node",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "156321.06286339916,6611139.675470055,1315281.428344033,8225191.288640352",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "caves",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "caves",
+      "class": "nodes",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "caves",
+      "layerId": "caves"
+    },
+    {
+      "geometry": "point",
+      "extent": [
+        1.4042559999999997,
+        50.9425607992595,
+        11.8153741,
+        59.20667170135131
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,barrier,access,tags->'foot' as foot,tags->'locked' as locked from planet_osm_point WHERE barrier='gate' AND (man_made is null or man_made NOT IN ('adit')) AND (\n(tags->'locked' is not null AND tags->'locked' <> 'no') OR\n(access IN ('no','private','destination','customers','delivery','permit') AND (tags->'foot' IS NULL OR tags->'foot' NOT IN ('yes','permissive'))) OR \n(tags->'foot' IN ('no','private','destination','customers','delivery','permit'))\n)) as nodes",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "156321.06286339916,6611139.675470055,1315281.428344033,8225191.288640352",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "gates",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "gates",
+      "class": "nodes",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "gates",
+      "layerId": "gates"
+    }
+  ],
+  "scale": 1,
+  "metatile": 2,
+  "name": "whiteprint",
+  "description": "A whiteprint-style map, somewhat inspired by TK25 maps while also showing features and amenities useful for hiking",
+  "attribution": ""
+}

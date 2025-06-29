@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   idth="800"
+   height="800"
+   version="1.1"
+   id="svg11"
+   sodipodi:docname="wasserrad_ehemalig.svg"
+   width="800"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata17">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs15" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
+     id="namedview13"
+     showgrid="false"
+     inkscape:zoom="3.337544"
+     inkscape:cx="405.38779"
+     inkscape:cy="392.25019"
+     inkscape:window-x="72"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg11" />
+  <path
+     style="fill:#000000;stroke:#000000;stroke-width:5;stroke-linecap:round;stroke-linejoin:round"
+     d="m 462.64062,322.05078 -15.66015,19.48828 -94.99024,116.08008 -16,19.21094 c 11.60834,9.66922 25.25667,16.58253 39.91993,20.2207 l 6.01953,-24.26172 c 10.99848,2.73018 22.47265,2.93251 33.56054,0.5918 l 5.16016,24.45898 c 14.7829,-3.11877 28.66696,-9.54663 40.60938,-18.80078 L 445.93945,459.2793 c 8.95723,-6.9392 16.22579,-15.81771 21.25977,-25.96875 l 22.40039,11.09961 c 6.71086,-13.53769 10.2667,-28.42013 10.40039,-43.5293 l -25,-0.2207 c 0.0989,-11.32834 -2.36977,-22.53189 -7.2207,-32.76954 l 22.58984,-10.71093 C 483.8989,343.5256 474.41867,331.51522 462.64062,322.05078 Z"
+     id="path2"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccccccccccccccccc" />
+  <circle
+     cx="400"
+     cy="-400"
+     r="52"
+     zx="y"
+     zy="0"
+     id="circle6"
+     style="fill:#fcfcfc;stroke:#ffffff;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"
+     transform="scale(1,-1)" />
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Svg" width="256" height="256">
+				<defs>
+					<clipPath id="clipPath">
+						
+					<rect x="0" y="0" width="256" height="256"/></clipPath>
+				<g transform="matrix(0.1875,0,0,0.1875,-6,-5.625)" id="gSmc6dve0e1z8"><path style="fill:none;stroke:#000000;stroke-width:6.200000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 32,10.00021 V 31.329547" id="path823"/>
+    <path style="fill:none;stroke:#000000;stroke-width:6.200000;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 32,31.329547 V 50.855638" id="path817"/></g></defs>
+				<g id="Pattern" style="clip-path: url(#clipPath);">
+				<use xlink:href="#gSmc6dve0e1z8" x="160" y="80"/><use xlink:href="#gSmc6dve0e1z8" x="160" y="16"/><use xlink:href="#gSmc6dve0e1z8" x="160" y="272"/><use xlink:href="#gSmc6dve0e1z8" x="160" y="144"/><use xlink:href="#gSmc6dve0e1z8" x="96" y="176"/><use xlink:href="#gSmc6dve0e1z8" x="32" y="144"/><use xlink:href="#gSmc6dve0e1z8" x="224" y="112"/><use xlink:href="#gSmc6dve0e1z8" x="224" y="240"/><use xlink:href="#gSmc6dve0e1z8" x="224" y="-16"/><use xlink:href="#gSmc6dve0e1z8" x="32" y="16"/><use xlink:href="#gSmc6dve0e1z8" x="32" y="272"/><use xlink:href="#gSmc6dve0e1z8" x="96" y="240"/><use xlink:href="#gSmc6dve0e1z8" x="96" y="-16"/><use xlink:href="#gSmc6dve0e1z8" x="224" y="48"/><use xlink:href="#gSmc6dve0e1z8" x="32" y="80"/><use xlink:href="#gSmc6dve0e1z8" x="160" y="208"/><use xlink:href="#gSmc6dve0e1z8" x="96" y="48"/><use xlink:href="#gSmc6dve0e1z8" x="224" y="176"/><use xlink:href="#gSmc6dve0e1z8" x="96" y="112"/><use xlink:href="#gSmc6dve0e1z8" x="32" y="208"/></g>
+			<desc>Created with Snap</desc></svg>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Svg"
+   width="64"
+   height="32"
+   version="1.1"
+   sodipodi:docname="nadel.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata20">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
+     id="namedview18"
+     showgrid="false"
+     inkscape:zoom="3.6875"
+     inkscape:cx="32"
+     inkscape:cy="32"
+     inkscape:window-x="72"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Svg" />
+  <defs
+     id="defs10">
+    <clipPath
+       id="clipPath">
+      <rect
+         x="0"
+         y="0"
+         width="64"
+         height="64"
+         id="rect2" />
+    </clipPath>
+    <g
+       id="gSlbbds85mq4">
+      <g
+         id="g7">
+        <path
+           d="M 3,0 0,10 h 0.5 l 2.25,-7 2,7 H 8 V 9.25 H 6 L 3.25,0 Z"
+           id="path5"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+  </defs>
+  <g
+     id="Pattern"
+     clip-path="url(#clipPath)"
+     transform="translate(0,-21)">
+    <use
+       xlink:href="#gSlbbds85mq4"
+       x="32"
+       y="32"
+       id="use12"
+       width="100%"
+       height="100%" />
+  </g>
+  <desc
+     id="desc15">Created with Snap</desc>
+</svg>
