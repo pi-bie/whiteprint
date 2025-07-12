@@ -17,7 +17,7 @@
   "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
   "Stylesheet": [
     "style.mss",
-    "brunnel.mss",
+    "roads.mss",
     "signatures.mss"
   ],
   "Layer": [
@@ -94,8 +94,7 @@
       "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
       "advanced": {},
       "name": "leisure",
-      "layerId": "leisure",
-      "status": "off"
+      "layerId": "leisure"
     },
     {
       "geometry": "polygon",
@@ -270,35 +269,6 @@
       "status": "off"
     },
     {
-      "geometry": "linestring",
-      "extent": [
-        8.31,
-        35.80768039971697,
-        54.1388804,
-        52.32999989909499
-      ],
-      "Datasource": {
-        "type": "postgis",
-        "table": "(select way,highway,railway,layer,bridge,tunnel\n            from planet_osm_line\n            where (highway is not null\n                or railway is not null)\n                and bridge not in ('no','false','0')\n            order by z_order\n            ) as roads",
-        "key_field": "",
-        "geometry_field": "",
-        "extent_cache": "auto",
-        "extent": "925064.9684921034,4274190.657504921,6026712.598245939,6860015.023396702",
-        "dbname": "gis",
-        "port": "5432",
-        "id": "bridges",
-        "project": "whiteprint-foot",
-        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
-      },
-      "id": "bridges",
-      "class": "roads",
-      "srs-name": "900913",
-      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
-      "advanced": {},
-      "name": "bridges",
-      "layerId": "bridges"
-    },
-    {
       "geometry": "polygon",
       "extent": [
         4.5225388,
@@ -357,6 +327,35 @@
       "layerId": "line_barriers"
     },
     {
+      "geometry": "polygon",
+      "extent": [
+        4.5225388,
+        51.21309129921425,
+        11.8515341,
+        55.5195359995963
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,building,leisure,railway,amenity,man_made,landuse,\"addr:housenumber\",\n(CASE \n\tWHEN (building IN ('house','apartments','detached','terrace','residential','farm','garage','bungalow','dormitory','semidetached_house')) THEN 'residential'\n\tWHEN (building IN ('commercial','retail','supermarket','industrial','kiosk','office','warehouse','farm_auxiliary','barn') OR amenity in ('bank','cinema','nightclub','restaurant') OR shop IS NOT null OR tags->'office' IN ('company','estate_agent','insurance','lawyer','notary','financial','tax_advisor','travel_agent') OR man_made IN ('works')) THEN 'commercial'\n\tWHEN (building IN ('public','civic','church','chapel','school','university','hospital','fire_station','college','government','kindergarten','train_station') OR amenity IN ('college','kindergarten','library','school','university','place_of_worship','clinic','hospital','theatre','courthouse','police','fire_station','prison','townhall','monastery') OR tags->'office' in ('government','diplomatic','religion') OR religion IS NOT null OR railway='station') THEN 'public'\nEND) AS usetype\nFROM planet_osm_polygon\nWHERE (building is not null\nor landuse='building'\nor power in ('station','sub_station')\nor railway='station'\nor amenity='place_of_worship')\nAND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\nORDER BY z_order DESC) as buildings",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
+        "port": "5432",
+        "dbname": "gis",
+        "id": "buildings",
+        "project": "whiteprint-foot",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "buildings",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "buildings",
+      "layerId": "buildings"
+    },
+    {
       "geometry": "linestring",
       "extent": [
         -4.0388503,
@@ -366,12 +365,42 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way,\n           (CASE WHEN feature IN ('highway_motorway_link', 'highway_trunk_link', 'highway_primary_link', 'highway_secondary_link', 'highway_tertiary_link') THEN substr(feature, 0, length(feature)-4) ELSE feature END) AS feature,\n            service,\n            ref,\n            refs,\n            height,\n            tunnel,\n            bridge,\n            bicycle,\n            foot,\n            sidewalk,\n            layernotnull,\n            z_order\nFROM ((SELECT way,\n('highway_' || highway) AS feature,\nNULL AS service,\nref,\narray_to_string(string_to_array(ref, ';'), E'\\n') as refs,\narray_length(string_to_array(ref, ';'),1) AS height,\nCASE WHEN tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\nCASE WHEN bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\nCASE WHEN bicycle in ('designated','official') then true else false end as bicycle,\nCASE WHEN foot in ('designated','official') then true else false end as foot,\ntags->'sidewalk' as sidewalk,\nCOALESCE(layer,0) AS layernotnull,\nosm_id,\nz_order\nFROM planet_osm_line\nWHERE highway IS NOT NULL)\nUNION ALL\n(SELECT\nway,\n('railway_' || railway) AS feature,\nservice,\nref,\narray_to_string(string_to_array(ref, ';'), E'\\n') as refs,\narray_length(string_to_array(ref, ';'),1) AS height,\nCASE WHEN tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\nCASE WHEN bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\nfalse AS bicycle,\nfalse AS foot,\nNULL AS sidewalk,\nCOALESCE(layer,0) AS layernotnull,\nosm_id,\nz_order\nFROM planet_osm_line\nWHERE railway IS NOT NULL)\n ) AS features\nORDER BY\nlayernotnull,\nCASE WHEN bridge='yes' THEN 2 ELSE 1 END,\nz_order,\nCASE WHEN substring(feature for 8) = 'railway_' THEN 2 ELSE 1 END,\nosm_id ) AS roads2_sql",
+        "table": "(select way,highway,railway,case when railway is not null then service else null end as service,ref,array_to_string(string_to_array(ref, ';'), E'\\n') as refs,tags->'sidewalk' as sidewalk,COALESCE(layer,0) AS layernotnull,array_length(string_to_array(ref, ';'),1) AS height,\n            case when railway is not null then 9999 when bridge in ('yes','true','1') then 1000 else z_order end as z_order,\n            case when tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\n            case when bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\n            case when bicycle in ('designated','official') then true else false end as bicycle,\n            case when foot in ('designated','official') then true else false end as foot\n            from planet_osm_line\n            where highway is not null\n                or railway is not null\n            order by layernotnull ASC,z_order ASC) as roads",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "dynamic",
+        "extent": "",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "roads_old",
+        "project": "whiteprint-clean",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "roads_old",
+      "class": "roads",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "roads_old",
+      "layerId": "roads_old",
+      "status": "off"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -4.0388503,
+        50.98171609925262,
+        12.039244699999998,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way,\n           (CASE WHEN feature IN ('highway_motorway_link', 'highway_trunk_link', 'highway_primary_link', 'highway_secondary_link', 'highway_tertiary_link') THEN substr(feature, 0, length(feature)-4) ELSE feature END) AS feature,\n            service,\n            ref,\n            tunnel,\n            bridge,\n            bicycle,\n            foot,\n            sidewalk,\n            layernotnull,\n            z_order\nFROM ((SELECT way,\n('highway_' || highway) AS feature,\nNULL AS service,\nref,\nCASE WHEN tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\nCASE WHEN bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\nCASE WHEN bicycle in ('designated','official') then true else false end as bicycle,\nCASE WHEN foot in ('designated','official') then true else false end as foot,\ntags->'sidewalk' as sidewalk,\nCOALESCE(layer,0) AS layernotnull,\nosm_id,\nz_order\nFROM planet_osm_line\nWHERE highway IS NOT NULL)\nUNION ALL\n(SELECT\nway,\n('railway_' || railway) AS feature,\nservice,\nref,\nCASE WHEN tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\nCASE WHEN bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\nfalse AS bicycle,\nfalse AS foot,\nNULL AS sidewalk,\nCOALESCE(layer,0) AS layernotnull,\nosm_id,\nz_order\nFROM planet_osm_line\nWHERE railway IS NOT NULL)\n ) AS features\nORDER BY\nlayernotnull,\nCASE WHEN bridge='yes' THEN 2 ELSE 1 END,\nz_order,\nCASE WHEN substring(feature for 8) = 'railway_' THEN (CASE WHEN service IS NOT NULL THEN 2 ELSE 3 END) ELSE 1 END,\nosm_id ) AS roads_sql",
         "key_field": "",
         "geometry_field": "way",
         "dbname": "gis",
-        "id": "roads2",
-        "project": "whiteprint-foot",
+        "id": "roads",
+        "project": "whiteprint-clean",
         "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
         "extent_cache": "auto",
         "extent": "-449602.7587862602,6618060.149427954,1340202.5895396175,8982220.323750606"
@@ -391,6 +420,36 @@
     {
       "geometry": "linestring",
       "extent": [
+        8.31,
+        35.80768039971697,
+        54.1388804,
+        52.32999989909499
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(select way,highway,railway,layer,bridge,tunnel\n            from planet_osm_line\n            where (highway is not null\n                or railway is not null)\n                and bridge not in ('no','false','0')\n            order by z_order\n            ) as roads",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "925064.9684921034,4274190.657504921,6026712.598245939,6860015.023396702",
+        "dbname": "gis",
+        "port": "5432",
+        "id": "bridges_old",
+        "project": "whiteprint-clean",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "bridges_old",
+      "class": "roads",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "bridges_old",
+      "layerId": "bridges_old",
+      "status": "off"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
         -4.0388503,
         50.98171609925262,
         12.039244699999998,
@@ -398,25 +457,27 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(select way,highway,railway,case when railway is not null then service else null end as service,ref,array_to_string(string_to_array(ref, ';'), E'\\n') as refs,tags->'sidewalk' as sidewalk,COALESCE(layer,0) AS layernotnull,array_length(string_to_array(ref, ';'),1) AS height,\n            case when railway is not null then 9999 when bridge in ('yes','true','1') then 1000 else z_order end as z_order,\n            case when tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\n            case when bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\n            case when bicycle in ('designated','official') then true else false end as bicycle,\n            case when foot in ('designated','official') then true else false end as foot\n            from planet_osm_line\n            where highway is not null\n                or railway is not null\n            order by layernotnull ASC,z_order ASC) as roads",
+        "table": "(SELECT way,\n           (CASE WHEN feature IN ('highway_motorway_link', 'highway_trunk_link', 'highway_primary_link', 'highway_secondary_link', 'highway_tertiary_link') THEN substr(feature, 0, length(feature)-4) ELSE feature END) AS feature,\n            service,\n            ref,\n            tunnel,\n            bridge,\n            bicycle,\n            foot,\n            sidewalk,\n            layernotnull,\n            z_order\nFROM ((SELECT way,\n('highway_' || highway) AS feature,\nNULL AS service,\nref,\nCASE WHEN tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\nCASE WHEN bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\nCASE WHEN bicycle in ('designated','official') then true else false end as bicycle,\nCASE WHEN foot in ('designated','official') then true else false end as foot,\ntags->'sidewalk' as sidewalk,\nCOALESCE(layer,0) AS layernotnull,\nosm_id,\nz_order\nFROM planet_osm_line\nWHERE highway IS NOT NULL AND bridge IS NOT NULL)\nUNION ALL\n(SELECT\nway,\n('railway_' || railway) AS feature,\nservice,\nref,\nCASE WHEN tunnel in ('yes','true','1') then 'yes'::text else tunnel end as tunnel,\nCASE WHEN bridge in ('yes','true','1') then 'yes'::text else bridge end as bridge,\nfalse AS bicycle,\nfalse AS foot,\nNULL AS sidewalk,\nCOALESCE(layer,0) AS layernotnull,\nosm_id,\nz_order\nFROM planet_osm_line\nWHERE railway IS NOT NULL AND bridge IS NOT NULL)\n ) AS features\nORDER BY\nlayernotnull,\nCASE WHEN bridge='yes' THEN 2 ELSE 1 END,\nz_order,\nCASE WHEN substring(feature for 8) = 'railway_' THEN (CASE WHEN service IS NOT NULL THEN 2 ELSE 3 END) ELSE 1 END,\nosm_id ) AS roads_sql",
         "key_field": "",
-        "geometry_field": "",
-        "extent_cache": "dynamic",
-        "extent": "",
+        "geometry_field": "way",
         "dbname": "gis",
-        "port": "5432",
-        "id": "roads",
-        "project": "whiteprint-foot",
-        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+        "id": "bridges",
+        "project": "whiteprint-clean",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6618060.149427954,1340202.5895396175,8982220.323750606"
       },
-      "id": "roads_old",
-      "class": "roads",
+      "id": "bridges",
+      "class": "",
       "srs-name": "900913",
       "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
       "advanced": {},
-      "name": "roads_old",
-      "layerId": "roads_old",
-      "status": "off"
+      "name": "bridges",
+      "properties": {
+        "cache-features": true,
+        "minzoom": 10
+      },
+      "layerId": "bridges"
     },
     {
       "geometry": "linestring",
@@ -486,35 +547,6 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(select way,building,leisure,railway,amenity,man_made,landuse,\"addr:housenumber\",\n(CASE \n\tWHEN (building IN ('house','apartments','detached','terrace','residential','farm','garage','bungalow','dormitory','semidetached_house')) THEN 'residential'\n\tWHEN (building IN ('commercial','retail','supermarket','industrial','kiosk','office','warehouse','farm_auxiliary','barn') OR amenity in ('bank','cinema','nightclub','restaurant') OR shop IS NOT null OR tags->'office' IN ('company','estate_agent','insurance','lawyer','notary','financial','tax_advisor','travel_agent') OR man_made IN ('works')) THEN 'commercial'\n\tWHEN (building IN ('public','civic','church','chapel','school','university','hospital','fire_station','college','government','kindergarten','train_station') OR amenity IN ('college','kindergarten','library','school','university','place_of_worship','clinic','hospital','theatre','courthouse','police','fire_station','prison','townhall','monastery') OR tags->'office' in ('government','diplomatic','religion') OR religion IS NOT null OR railway='station') THEN 'public'\nEND) AS usetype\nFROM planet_osm_polygon\nWHERE (building is not null\nor landuse='building'\nor power in ('station','sub_station')\nor railway='station'\nor amenity='place_of_worship')\nAND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\nORDER BY z_order DESC) as buildings",
-        "key_field": "",
-        "geometry_field": "way",
-        "extent_cache": "auto",
-        "extent": "503446.71630882256,6659074.018061195,1319306.7411311178,7463357.430875439",
-        "port": "5432",
-        "dbname": "gis",
-        "id": "buildings",
-        "project": "whiteprint-foot",
-        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
-      },
-      "id": "buildings",
-      "class": "",
-      "srs-name": "900913",
-      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
-      "advanced": {},
-      "name": "buildings",
-      "layerId": "buildings"
-    },
-    {
-      "geometry": "polygon",
-      "extent": [
-        4.5225388,
-        51.21309129921425,
-        11.8515341,
-        55.5195359995963
-      ],
-      "Datasource": {
-        "type": "postgis",
         "table": "(select way,building,amenity,\nsqrt(way_area/ST_Area(ST_OrientedEnvelope(way))) AS factor,\nsqrt((sin(pi()/2-mrad)*mheight/(!pixel_height!))^2+(cos(0.5*pi()-mrad)*mheight/(!pixel_width!))^2) AS mheight,\nsqrt((-sin(pi()/2-mrad)*mwidth/(!pixel_height!))^2+(cos(-.5*pi()-mrad)*mwidth/(!pixel_width!))^2) AS mwidth,\nCASE WHEN (mheight > mwidth) THEN Degrees(mrad) ELSE Degrees(mrad+pi()/2) END AS mdir\nFROM planet_osm_polygon AS poly\n\tCROSS JOIN LATERAL ST_ExteriorRing(ST_OrientedEnvelope(way)) AS oenv(geom)\n\tCROSS JOIN LATERAL ST_Length(ST_MakeLine(ST_PointN(geom,1), ST_PointN(geom,2))) as mheight\n\tCROSS JOIN LATERAL ST_Length(ST_MakeLine(ST_PointN(geom,2), ST_PointN(geom,3))) as mwidth\n\tCROSS JOIN LATERAL ST_Azimuth(ST_PointN(geom,1),ST_PointN(geom,2)) AS mrad\nWHERE (building IN ('cathedral','church','chapel','mosque','synagogue') \nAND amenity='place_of_worship')\nAND way_area > 0.05*!pixel_width!::real*!pixel_height!::real\nORDER BY z_order DESC) as buildings",
         "key_field": "",
         "geometry_field": "way",
@@ -533,6 +565,34 @@
       "advanced": {},
       "name": "worshipplaces",
       "layerId": "worshipplaces"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -4.0388503,
+        50.98171609925262,
+        12.039244699999998,
+        62.51465530131363
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT\n            way,\n            highway,\n            height,\n            width,\n            refs\n          FROM (\n            SELECT\n                osm_id,\n                way,\n                highway,\n                array_length(refs,1) AS height,\n                (SELECT MAX(char_length(ref)) FROM unnest(refs) AS u(ref)) AS width,\n                array_to_string(refs, E'\\n') AS refs\n              FROM (\n                SELECT\n                    osm_id,\n                    way,\n                    COALESCE(\n                      CASE WHEN highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary') THEN highway END,\n                      CASE WHEN aeroway IN ('runway', 'taxiway') THEN aeroway END\n                    ) AS highway,\n                    string_to_array(ref, ';') AS refs\n                  FROM planet_osm_line\n                  WHERE (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary') OR aeroway IN ('runway', 'taxiway'))\n                    AND ref IS NOT NULL\n              ) AS p) AS q\n          WHERE height <= 4 AND width <= 11\n          ORDER BY\n            CASE\n              WHEN highway = 'motorway' THEN 38\n              WHEN highway = 'trunk' THEN 37\n              WHEN highway = 'primary' THEN 36\n              WHEN highway = 'secondary' THEN 35\n              WHEN highway = 'tertiary' THEN 34\n              WHEN highway = 'runway' THEN 6\n              WHEN highway = 'taxiway' THEN 5\n            END DESC NULLS LAST,\n            height DESC,\n            width DESC,\n            refs,\n            osm_id\n        ) AS roads_ref",
+        "key_field": "",
+        "geometry_field": "way",
+        "extent_cache": "auto",
+        "extent": "-449602.7587862602,6618060.149427954,1340202.5895396175,8982220.323750606",
+        "dbname": "gis",
+        "id": "roads-ref",
+        "project": "whiteprint-clean",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "roads-ref",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "roads-ref",
+      "layerId": "roads-ref"
     },
     {
       "geometry": "point",
