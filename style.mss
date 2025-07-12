@@ -823,7 +823,7 @@ Map {
 
 //Beschriftung und Beschilderung von Straßen und Fußwegen
 
-#roads::shields[zoom>=12][ref!=''] { [feature='highway_motorway'], [feature='highway_trunk'] {
+#roads::shields[zoom>=12][ref!=''][tunnel!='yes'] { [feature='highway_motorway'], [feature='highway_trunk'] {
   shield-file: url("symbols/shieldx[height].svg");
   shield-name: [refs];
   shield-wrap-character: ";";
@@ -837,7 +837,7 @@ Map {
   shield-placement-type: simple;
 } }
 
-#roads::names[zoom>=14][feature!='highway_motorway'][feature!='highway_trunk'][feature!='railway_rail'][feature!='railway_narrow_gauge'][feature!='railway_light_rail'][feature!='railway_subway'][feature!='railway_funicular'][ref!='']  {
+#roads::names[zoom>=14][tunnel!='yes'][feature!='highway_motorway'][feature!='highway_trunk'][feature!='railway_rail'][feature!='railway_narrow_gauge'][feature!='railway_light_rail'][feature!='railway_subway'][feature!='railway_funicular'][ref!='']  {
   text-name: [ref];
   text-face-name: @sans-book;
   text-placement: line;
